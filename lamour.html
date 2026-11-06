@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A sunflower for Ghums</title>
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="A sunflower for Ghums">
+<meta property="og:description" content="Water it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Figtree:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#CFE2EC; --sky-low:#EEF0E4; --ink:#2C3A2E; --muted:#5F6F63;
+    --stem:#5E8F45; --leaf:#78A955; --leaf-dark:#5C8A3F;
+    --petal:#F2B630; --petal-2:#E39E1A; --seed:#5A3A16;
+    --pot:#4F7383; --pot-dark:#3D5C69; --soil:#4A3524; --water:#7DB7D6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-low) 70%);background-attachment:fixed;
+    color:var(--ink);font-family:"Figtree",system-ui,sans-serif;min-height:100svh;-webkit-tap-highlight-color:transparent}
+  main{max-width:30rem;margin:0 auto;padding:max(1.6rem,env(safe-area-inset-top)) 1.25rem 3rem;text-align:center}
+  h1{font-family:"Kalam",cursive;font-weight:400;font-size:clamp(1.9rem,8vw,2.5rem);line-height:1.1;margin:0 0 .25rem}
+  .sub{color:var(--muted);margin:0;font-size:.98rem}
+
+  .scene{position:relative;width:min(74vw,300px,calc(54svh * .577));margin:.6rem auto 0}
+  .scene #plant{display:block;width:100%;height:auto;overflow:visible}
+  .stem{fill:none;stroke:var(--stem);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.3,.7,.2,1)}
+
+  .scene .can{position:absolute;right:-24%;top:30%;width:38%;height:auto;pointer-events:none;transform-origin:20% 70%;transition:transform .45s ease,opacity .3s}
+  .scene .can.pour{transform:rotate(-38deg) translate(-8%,6%)}
+  .scene .can.gone{opacity:0}
+
+  .wish{min-height:5.6rem;margin:.6rem auto 0;max-width:24rem;display:flex;flex-direction:column;justify-content:center}
+  .wish p{font-family:"Kalam",cursive;font-size:1.45rem;line-height:1.35;margin:0}
+  .wish .step{font-size:.85rem;color:var(--muted);margin-top:.35rem;font-family:"Figtree",sans-serif}
+  .fade{animation:fade .7s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .water{margin:1rem auto 0;font:inherit;font-size:1.05rem;font-weight:500;color:#fff;background:var(--pot);border:0;border-radius:999px;
+    padding:.8rem 1.6rem;cursor:pointer;box-shadow:0 4px 0 var(--pot-dark);transition:transform .1s,box-shadow .1s}
+  .water:active{transform:translateY(3px);box-shadow:0 1px 0 var(--pot-dark)}
+  .water:disabled{opacity:.55;cursor:default}
+  .water:focus-visible{outline:3px solid var(--petal);outline-offset:3px}
+  .water[hidden]{display:none}
+
+  .grew{margin:2.2rem auto 0;max-width:24rem;text-align:left}
+  .grew h2{font-family:"Kalam",cursive;font-weight:400;font-size:1.3rem;margin:0 0 .6rem;text-align:center}
+  .grew ol{margin:0;padding:0;list-style:none}
+  .grew li{font-family:"Kalam",cursive;font-size:1.15rem;line-height:1.35;padding:.45rem 0 .45rem 1.6rem;border-top:1px solid rgba(44,58,46,.15);position:relative}
+  .grew li::before{content:"";position:absolute;left:.2rem;top:.85rem;width:12px;height:7px;border-radius:0 100% 0 100%;background:var(--leaf)}
+  .again{margin-top:1.2rem;font:inherit;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--ink);padding:0;cursor:pointer}
+  .turn-note{font-size:1rem;color:var(--muted);margin:.5rem 0 0}
+
+  .store{display:none}
+  noscript p{background:#fff;padding:1rem;border-radius:6px;text-align:left}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* edit mode: add #edit to the address */
+  .editing .store{display:block;text-align:left;background:#fff;padding:1rem 1rem 1.2rem;border-radius:6px;margin-top:2rem}
+  .editing .store h3{font-size:1rem;margin:0 0 .6rem}
+  .editing .store ol{margin:0;padding-left:1.4rem}
+  .editing .store li{margin:.35rem 0;padding:.3rem .4rem;border:1px dashed #b4bcb2;border-radius:3px;font-family:"Kalam";font-size:1.1rem;position:relative}
+  .editing .store li .del{position:absolute;right:-.2rem;top:-.6rem;font:12px Figtree;background:var(--ink);color:#fff;border:0;border-radius:10px;padding:.1rem .45rem;cursor:pointer}
+  .editing [contenteditable="true"]{outline:none}
+  .editing [contenteditable="true"]:focus{background:#FFFBE8}
+  .editing h1[contenteditable],.editing .sub[contenteditable]{outline:1px dashed rgba(44,58,46,.4);outline-offset:3px}
+  #edit-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--ink);color:#fff;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;padding:.8rem 1rem;font-size:.92rem}
+  #edit-bar span{flex:1 1 14rem}
+  #edit-bar button,#edit-panel button{font:inherit;background:var(--petal);color:var(--ink);border:0;border-radius:3px;padding:.4rem .8rem;cursor:pointer}
+  #edit-panel{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:1rem}
+  #edit-panel[hidden]{display:none}
+  #edit-panel .box{background:#fff;max-width:36rem;width:100%;padding:1.1rem;border-radius:6px;text-align:left}
+  #edit-panel textarea{width:100%;height:8rem;font:12px/1.4 ui-monospace,Menlo,monospace;margin:.6rem 0}
+</style>
+</head>
+<body>
+<main>
+  <noscript><p>This page needs a real browser. If you opened it from WhatsApp, tap ⋮ and choose Open in Chrome, or Open in Safari.</p></noscript>
+
+  <h1>A sunflower for Ghums</h1>
+  <p class="sub">It only grows if you water it.</p>
+
+  <div class="scene">
+    <svg id="plant" viewBox="0 0 300 520" role="img" aria-label="A sunflower growing in a pot">
+      <g id="grow" data-gen></g>
+      <!-- pot -->
+      <ellipse cx="150" cy="512" rx="82" ry="8" fill="#000" opacity=".12"/>
+      <path d="M86 440 L214 440 L200 508 Q150 516 100 508 Z" fill="var(--pot)"/>
+      <path d="M92 468 L208 468 L205 480 L95 480 Z" fill="var(--pot-dark)" opacity=".55"/>
+      <rect x="78" y="424" width="144" height="22" rx="5" fill="var(--pot)"/>
+      <rect x="78" y="440" width="144" height="6" fill="var(--pot-dark)" opacity=".5"/>
+      <ellipse cx="150" cy="426" rx="66" ry="7" fill="var(--soil)"/>
+      <g id="drops" data-gen></g>
+    </svg>
+    <svg class="can" id="can" viewBox="0 0 120 90" aria-hidden="true">
+      <path d="M30 30 L84 30 L80 82 L34 82 Z" fill="var(--pot-dark)"/>
+      <path d="M84 40 L114 14 L118 18 L86 54 Z" fill="var(--pot-dark)"/>
+      <ellipse cx="116" cy="15" rx="5" ry="7" transform="rotate(-40 116 15)" fill="var(--pot)"/>
+      <path d="M30 40 Q6 44 12 62 Q16 74 32 70" fill="none" stroke="var(--pot-dark)" stroke-width="6"/>
+      <rect x="28" y="26" width="58" height="8" rx="3" fill="var(--pot)"/>
+    </svg>
+  </div>
+
+  <div class="wish" id="wish" data-gen aria-live="polite"><p class="quiet" style="font-size:1.15rem;color:var(--muted)">Every time you water it, it grows a little, and leaves you a wish.</p></div>
+  <button class="water" id="water" data-gen type="button">Water it</button>
+
+  <section class="grew" id="grew" data-gen></section>
+
+  <!-- The wishes live here. Edit them by opening this page with #edit at the end of the address. -->
+  <div class="store" id="store">
+    <h3>Wishes, one per watering, in this order</h3>
+    <ol id="wishes">
+      <li>A year that feels lighter than the last one.</li>
+      <li>Every place you’ve been quietly manifesting, one trip at a time.</li>
+      <li>The courage to call yourself a photographer, out loud.</li>
+      <li>People around you who make things lighter, not heavier.</li>
+      <li>And London. One day soon.</li>
+    </ol>
+    <h3 style="margin-top:1rem">When it blooms</h3>
+    <p id="final-text">Happy birthday, Ghums 🌻</p>
+    <h3 style="margin-top:1rem">Under the flower</h3>
+    <p id="final-sub">Sunflowers turn towards the light. I hope this year you find plenty of it.</p>
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var EDIT=/edit/i.test(location.hash);
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS="http://www.w3.org/2000/svg";
+  var genInitial=new Map();
+  document.querySelectorAll('[data-gen]').forEach(function(n){ genInitial.set(n,n.innerHTML); });
+  function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); return e; }
+
+  var grow=document.getElementById('grow'), drops=document.getElementById('drops'), can=document.getElementById('can');
+  var btn=document.getElementById('water'), wishBox=document.getElementById('wish'), grewBox=document.getElementById('grew');
+  var wishes=[], finalText='', finalSub='', stage=0, busy=false, stem, stemLen, leaves=[], bud, head, petals, petalList=[], discEl;
+  var TOP=118, BASE=426;
+
+  // animation helpers: they set the SVG transform attribute directly, which works the same in every browser
+  function backOut(t){ var c=1.6; return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2); }
+  function tween(dur,delay,fn,done){
+    if(reduce||dur<=0){ fn(1); if(done) done(); return; }
+    var t0=null;
+    setTimeout(function(){
+      requestAnimationFrame(function f(ts){ if(t0===null) t0=ts; var k=Math.min(1,(ts-t0)/dur); fn(k); if(k<1) requestAnimationFrame(f); else if(done) done(); });
+    }, delay||0);
+  }
+  function setScale(node,ax,ay,k){
+    k=Math.max(0.0001,k);
+    node.setAttribute('transform','translate('+ax+' '+ay+') scale('+k+') translate('+(-ax)+' '+(-ay)+')');
+  }
+  function pop(node,dur,delay){ tween(dur,delay,function(t){ setScale(node,node._ax,node._ay,backOut(t)); }); }
+  function shrink(node,dur){ tween(dur,0,function(t){ setScale(node,node._ax,node._ay,1-t); }); }
+
+  function load(){
+    wishes=Array.prototype.map.call(document.querySelectorAll('#wishes li'),function(li){ return li.innerHTML.replace(/<button[^>]*>.*?<\/button>/g,'').trim(); }).filter(Boolean);
+    finalText=document.getElementById('final-text').innerHTML;
+    finalSub=document.getElementById('final-sub').innerHTML;
+  }
+
+  function build(){
+    grow.innerHTML=''; leaves=[];
+    stem=el('path',{class:'stem',d:'M150 '+BASE+' C 142 350, 160 250, 150 '+TOP});
+    grow.appendChild(stem);
+    stemLen=stem.getTotalLength();
+    stem.style.strokeDasharray=stemLen; stem.style.strokeDashoffset=stemLen;
+    var n=wishes.length;
+    for(var i=0;i<n;i++){
+      var at=stemLen*(0.12+0.72*(i/(Math.max(1,n-1)))), p=stem.getPointAtLength(at), right=i%2===0, s=1-i*0.04;
+      var w=46*s, h=20*s, x=right?p.x+2:p.x-2-w, y=p.y-h/2;
+      var d=right? 'M'+x+' '+(y+h/2)+' Q'+(x+w*0.45)+' '+(y-h*0.5)+' '+(x+w)+' '+(y+h*0.25)+' Q'+(x+w*0.5)+' '+(y+h*1.2)+' '+x+' '+(y+h/2)+' Z'
+                 : 'M'+(x+w)+' '+(y+h/2)+' Q'+(x+w*0.55)+' '+(y-h*0.5)+' '+x+' '+(y+h*0.25)+' Q'+(x+w*0.5)+' '+(y+h*1.2)+' '+(x+w)+' '+(y+h/2)+' Z';
+      var g=el('g',{class:'leaf '+(right?'r':'l')});
+      g.appendChild(el('path',{d:d,fill:i%2?'var(--leaf)':'var(--leaf-dark)'}));
+      var vein=right? 'M'+(x+2)+' '+(y+h/2)+' Q'+(x+w*0.5)+' '+(y+h*0.3)+' '+(x+w-4)+' '+(y+h*0.3)
+                    : 'M'+(x+w-2)+' '+(y+h/2)+' Q'+(x+w*0.5)+' '+(y+h*0.3)+' '+(x+4)+' '+(y+h*0.3);
+      g.appendChild(el('path',{d:vein,fill:'none',stroke:'rgba(255,255,255,.35)','stroke-width':1.2}));
+      g._ax=p.x; g._ay=p.y; setScale(g,p.x,p.y,0);
+      grow.appendChild(g); leaves.push(g);
+    }
+    // head: bud + petals, rotates towards the pointer once bloomed
+    head=el('g',{class:'head'});
+    bud=el('g',{class:'bud'}); bud._ax=150; bud._ay=TOP+6; setScale(bud,150,TOP+6,0);
+    bud.appendChild(el('path',{d:'M150 '+(TOP+6)+' C 134 '+(TOP-4)+', 138 '+(TOP-30)+', 150 '+(TOP-34)+' C 162 '+(TOP-30)+', 166 '+(TOP-4)+', 150 '+(TOP+6)+' Z',fill:'var(--leaf-dark)'}));
+    bud.appendChild(el('path',{d:'M150 '+(TOP-6)+' C 146 '+(TOP-16)+', 147 '+(TOP-26)+', 150 '+(TOP-31)+' C 153 '+(TOP-26)+', 154 '+(TOP-16)+', 150 '+(TOP-6)+' Z',fill:'var(--petal)'}));
+    head.appendChild(bud);
+    petals=el('g',{class:'petals'}); petalList=[];
+    var cy=TOP-30;
+    for(var r=0;r<2;r++){
+      for(var k=0;k<16;k++){
+        var a=k*22.5+(r?11.25:0);
+        var holder=el('g',{transform:'rotate('+a+' 150 '+cy+')'});
+        var pe=el('ellipse',{class:'petal',cx:150,cy:cy-(r?40:46),rx:r?10:12,ry:r?28:32,fill:r?'var(--petal-2)':'var(--petal)'});
+        pe._ax=150; pe._ay=cy; pe._delay=(r?0:250)+k*30; setScale(pe,150,cy,0);
+        holder.appendChild(pe); petals.appendChild(holder); petalList.push(pe);
+      }
+    }
+    var disc=el('g',{class:'disc'}); disc._ax=150; disc._ay=cy; setScale(disc,150,cy,0); discEl=disc;
+    disc.appendChild(el('circle',{cx:150,cy:cy,r:28,fill:'var(--seed)'}));
+    for(var j=0;j<70;j++){ var ang=j*137.5*Math.PI/180, rr=2.9*Math.sqrt(j); disc.appendChild(el('circle',{cx:150+rr*Math.cos(ang),cy:cy+rr*Math.sin(ang),r:1.4,fill:'#8A6230'})); }
+    petals.appendChild(disc);
+    head.appendChild(petals);
+    grow.appendChild(head);
+  }
+
+  function setStem(frac){ stem.style.strokeDashoffset=stemLen*(1-frac); }
+
+  function showWish(html,step){
+    wishBox.innerHTML='<p class="fade">'+html+'</p>'+(step?'<span class="step fade">'+step+'</span>':'');
+  }
+
+  function rain(){
+    if(reduce) return;
+    drops.innerHTML='';
+    for(var i=0;i<9;i++){
+      var x=128+Math.random()*60, d=el('ellipse',{cx:x,cy:300,rx:2.2,ry:4.5,fill:'var(--water)'});
+      drops.appendChild(d);
+      d.setAttribute('opacity','0');
+      (function(d){ tween(620+Math.random()*250,i*55,function(t){ var e=t*t; d.setAttribute('cy',240+e*182); d.setAttribute('opacity',t<.2?t*5:1-(t-.2)/.8); },function(){ d.remove(); }); })(d);
+    }
+  }
+
+  function water(){
+    if(busy) return; busy=true; btn.disabled=true;
+    if(!reduce){ can.classList.add('pour'); }
+    rain();
+    setTimeout(function(){
+      can.classList.remove('pour');
+      var n=wishes.length;
+      if(stage<n){
+        stage++;
+        setStem(0.15+0.75*(stage/n));
+        pop(leaves[stage-1],800,350);
+        if(stage===n){ setStem(1); pop(bud,700,500); }
+        showWish(wishes[stage-1], stage+' of '+n);
+        btn.textContent = stage===n ? 'Water it once more' : 'Water it again';
+      } else {
+        bloom(); return;
+      }
+      setTimeout(function(){ busy=false; btn.disabled=false; btn.focus(); }, reduce?0:900);
+    }, reduce?0:650);
+  }
+
+  function bloom(){
+    setStem(1);
+    setTimeout(function(){
+      shrink(bud,300);
+      pop(discEl,600,150);
+      petalList.forEach(function(pe){ pop(pe,700,pe._delay); });
+      can.classList.add('gone'); btn.hidden=true;
+      showWish(finalText,'');
+      wishBox.insertAdjacentHTML('beforeend','<p class="turn-note fade">'+finalSub+'</p>');
+      var h='<h2>Everything it grew from</h2><ol>';
+      wishes.forEach(function(w){ h+='<li>'+w+'</li>'; });
+      h+='</ol><p style="text-align:center"><button class="again" id="again" type="button">Plant it again</button></p>';
+      grewBox.innerHTML=h;
+      document.getElementById('again').addEventListener('click',restart);
+      busy=false; following=true;
+    }, reduce?0:500);
+  }
+
+  // once it blooms, the flower turns towards your finger or cursor
+  var following=false;
+  function turn(e){
+    if(!following) return;
+    var r=document.getElementById('plant').getBoundingClientRect();
+    var cx=r.left+r.width/2, dx=(e.clientX-cx)/(window.innerWidth/2);
+    var deg=Math.max(-16,Math.min(16,dx*16));
+    head.setAttribute('transform','rotate('+deg.toFixed(1)+' 150 '+TOP+')');
+  }
+  window.addEventListener('pointermove',turn);
+  window.addEventListener('pointerdown',turn);
+
+  function restart(){
+    following=false; stage=0; busy=false;
+    load(); build();
+    can.classList.remove('gone'); btn.hidden=false; btn.disabled=false; btn.textContent='Water it';
+    wishBox.innerHTML=genInitial.get(wishBox); grewBox.innerHTML='';
+    window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+  }
+
+  btn.addEventListener('click',water);
+  load(); build();
+
+  /* ============ EDIT MODE (add #edit to the address) ============ */
+  if(!EDIT) return;
+  document.documentElement.classList.add('editing');
+  var list=document.getElementById('wishes');
+  function makeEditable(li){
+    li.setAttribute('contenteditable','true');
+    var del=document.createElement('button'); del.type='button'; del.className='del'; del.textContent='remove'; del.setAttribute('contenteditable','false'); del.setAttribute('data-editui','');
+    del.addEventListener('click',function(){ li.remove(); restart(); });
+    li.appendChild(del);
+  }
+  list.querySelectorAll('li').forEach(makeEditable);
+  ['final-text','final-sub'].forEach(function(id){ document.getElementById(id).setAttribute('contenteditable','true'); });
+  document.querySelector('h1').setAttribute('contenteditable','true');
+  document.querySelector('.sub').setAttribute('contenteditable','true');
+  var add=document.createElement('button'); add.type='button'; add.textContent='+ Add a wish'; add.setAttribute('data-editui','');
+  add.style.cssText='margin-top:.6rem;font:inherit;background:none;border:1px solid var(--ink);border-radius:3px;padding:.3rem .7rem;cursor:pointer';
+  add.addEventListener('click',function(){ var li=document.createElement('li'); li.textContent='New wish'; list.appendChild(li); makeEditable(li); li.focus(); restart(); });
+  list.after(add);
+  list.addEventListener('blur',function(){ restart(); },true);
+
+  var bar=document.createElement('div'); bar.id='edit-bar'; bar.setAttribute('data-editui','');
+  bar.innerHTML='<span>Editing. Change the wishes below, then save.</span><button type="button" id="ed-save">Save edited copy</button>';
+  document.body.appendChild(bar); document.body.style.paddingBottom='5rem';
+  var panel=document.createElement('div'); panel.id='edit-panel'; panel.hidden=true; panel.setAttribute('data-editui','');
+  panel.innerHTML='<div class="box"><p id="ep-msg"></p><textarea id="ep-code" readonly></textarea><button type="button" id="ep-copy">Copy all</button> <button type="button" id="ep-close">Close</button></div>';
+  document.body.appendChild(panel);
+
+  function cleanHTML(){
+    var clone=document.documentElement.cloneNode(true);
+    clone.classList.remove('editing'); if(!clone.getAttribute('class')) clone.removeAttribute('class');
+    clone.querySelectorAll('[data-editui]').forEach(function(n){ n.remove(); });
+    clone.querySelectorAll('a[download]').forEach(function(n){ n.remove(); });
+    clone.querySelectorAll('#wishes li').forEach(function(li){ if(!li.textContent.trim()) li.remove(); });
+    clone.querySelectorAll('[contenteditable]').forEach(function(n){ n.removeAttribute('contenteditable'); });
+    var origGen=Array.from(genInitial.keys()), cg=clone.querySelectorAll('[data-gen]');
+    cg.forEach(function(n,i){ n.innerHTML=genInitial.get(origGen[i]); });
+    var w=clone.querySelector('#water'); w.removeAttribute('hidden'); w.removeAttribute('disabled');
+    clone.querySelector('#can').setAttribute('class','can');
+    clone.querySelector('body').removeAttribute('style');
+    return '<!DOCTYPE html>\n'+clone.outerHTML;
+  }
+  var inFrame=false; try{ inFrame=window.self!==window.top; }catch(e){ inFrame=true; }
+  function showPanel(msg){ document.getElementById('ep-msg').innerHTML=msg; document.getElementById('ep-code').value=cleanHTML(); panel.hidden=false; }
+  document.getElementById('ep-close').onclick=function(){ panel.hidden=true; };
+  document.getElementById('ep-copy').onclick=function(){ var ta=document.getElementById('ep-code'); ta.focus(); ta.select(); var ok=false; try{ok=document.execCommand('copy');}catch(e){} this.textContent=ok?'Copied':'Select the text and copy it'; };
+  document.getElementById('ed-save').onclick=function(){
+    var html=cleanHTML(), done=false;
+    if(!inFrame){ try{ var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([html],{type:'text/html'})); a.download='index.html'; document.body.appendChild(a); a.click(); done=true; setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },4000);}catch(e){} }
+    showPanel(done ? '<b>Saved.</b> Look in your Downloads for <i>index.html</i>. If nothing downloaded, copy the code below into a file named index.html.'
+                   : '<b>This window can’t download files.</b> Copy the code below into a file named index.html, or open the file directly in Chrome or Safari and save again.');
+  };
+})();
+</script>
+</body>
+</html>
